@@ -1,0 +1,605 @@
+{
+  "description": "Language-neutral webhook verification vectors. Generated from the code that signs real deliveries; do not edit by hand.",
+  "scheme": "X-Vojo-Signature: t=<unix seconds>,v1=<lowercase hex HMAC-SHA256 of `${t}.${raw body bytes}`>[,v1=<...>]",
+  "default_tolerance_seconds": 300,
+  "how_to_use": "For each vector call the verifier with body, header (null = absent), secrets, tolerance_seconds and now (unix seconds). expect.ok true: it returns an event whose type, id and attempt_id equal expect.event. expect.ok false: it raises the error kind named by expect.error. Secrets here are fake.",
+  "vectors": [
+    {
+      "name": "valid_single_signature",
+      "description": "One signature, signed with the secret held.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "valid_snake_case_event",
+      "description": "Wrapper events use event_type/event_id; the event is normalised.",
+      "body": "{\"event_type\":\"wrapper.ready\",\"event_id\":\"evt_wrapper_0001\",\"attempt_id\":\"att_0002\",\"organisation_id\":\"org_0001\",\"api_version\":\"2026-10-07\",\"created_at\":\"2026-09-21T14:13:20Z\",\"data\":{\"id\":\"wrp_0001\",\"status\":\"ready\"}}",
+      "header": "t=1790000000,v1=a4b5583a4f5d8c9c4c45be60ffb0d05000c8ee9afc864b975c4de42498d74cae",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "wrapper.ready",
+          "id": "evt_wrapper_0001",
+          "attempt_id": "att_0002"
+        }
+      }
+    },
+    {
+      "name": "valid_unknown_event_type",
+      "description": "An event type this SDK has never heard of still verifies and parses.",
+      "body": "{\"eventType\":\"screen.something_new\",\"eventId\":\"evt_new_0001\",\"attemptId\":\"att_0003\",\"newField\":true}",
+      "header": "t=1790000000,v1=da6e2108bbe4857b9902b93dda6724e96777e651dff854b3c80aa22cb94eff32",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "screen.something_new",
+          "id": "evt_new_0001",
+          "attempt_id": "att_0003"
+        }
+      }
+    },
+    {
+      "name": "valid_non_ascii_body",
+      "description": "The HMAC covers UTF-8 bytes.",
+      "body": "{\"eventType\":\"screen.quality\",\"eventId\":\"evt_uni_0001\",\"attemptId\":\"att_0004\",\"screenName\":\"Café Lobby – Süd 東京 🖥️\"}",
+      "header": "t=1790000000,v1=da85522d33503db4a5e59f56f1e7f930192c332786562f3f7ec44040dc1e2c2a",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "screen.quality",
+          "id": "evt_uni_0001",
+          "attempt_id": "att_0004"
+        }
+      }
+    },
+    {
+      "name": "roll_overlap_first_matches",
+      "description": "Two signatures during a roll; the receiver holds only the new secret.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7,v1=80b49fe748f38e127cd60817233b7ed9c9e5d4d9eef1bf696266f0afe5b1de6b",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "roll_overlap_only_second_matches",
+      "description": "Two signatures during a roll; the receiver still holds only the previous secret.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7,v1=80b49fe748f38e127cd60817233b7ed9c9e5d4d9eef1bf696266f0afe5b1de6b",
+      "secrets": [
+        "vwsec_22222222222222222222222222222222"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "receiver_holds_two_secrets_second_matches",
+      "description": "The receiver passes a list of secrets; the second one matches.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_33333333333333333333333333333333",
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "signature_order_reversed",
+      "description": "Position of a v1 value must not matter.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=80b49fe748f38e127cd60817233b7ed9c9e5d4d9eef1bf696266f0afe5b1de6b,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "order_of_parts_reversed",
+      "description": "v1 before t is still the same header.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7,t=1790000000",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "whitespace_after_comma",
+      "description": "Whitespace around parts is ignored.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000, v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "unknown_scheme_ignored",
+      "description": "A scheme other than v1 is ignored, for forward compatibility.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v2=abcdef,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "tolerance_boundary_past_passes",
+      "description": "Exactly tolerance seconds old passes.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000300,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "tolerance_boundary_future_passes",
+      "description": "Exactly tolerance seconds ahead passes.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1789999700,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "custom_tolerance_passes",
+      "description": "A wider tolerance from the caller is honoured.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790001000,
+      "tolerance_seconds": 1000,
+      "expect": {
+        "ok": true,
+        "event": {
+          "type": "verification.ping",
+          "id": "evt_ping_0001",
+          "attempt_id": "att_0001"
+        }
+      }
+    },
+    {
+      "name": "tampered_body",
+      "description": "One character of the body changed.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0002\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "reserialised_body",
+      "description": "Parsing and re-serialising changes the bytes, so verification fails.",
+      "body": "{\n \"eventType\": \"verification.ping\",\n \"eventId\": \"evt_ping_0001\",\n \"attemptId\": \"att_0001\",\n \"playId\": \"play_0001\",\n \"organisationId\": \"org_0001\",\n \"t0\": \"2026-09-21T14:13:20.000Z\",\n \"events\": []\n}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "tampered_signature",
+      "description": "One hex digit of the signature changed.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d0",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "tampered_timestamp",
+      "description": "The timestamp is part of the signed content.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000001,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "wrong_secret",
+      "description": "Signed with a secret the receiver does not hold.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_33333333333333333333333333333333"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "roll_overlap_neither_matches",
+      "description": "Two signatures, neither from a held secret.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7,v1=80b49fe748f38e127cd60817233b7ed9c9e5d4d9eef1bf696266f0afe5b1de6b",
+      "secrets": [
+        "vwsec_33333333333333333333333333333333"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "uppercase_hex_signature",
+      "description": "Signatures are lowercase hex, as sent.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4DBD2C384E81FF6D4A6A066E56D62D5C307A50B02DEB9E2BE6155B63782199D7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "non_hex_signature",
+      "description": "A v1 value that is not hex never matches and must not throw.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=not-hex-at-all",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "truncated_signature",
+      "description": "A short v1 value never matches and must not throw.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "empty_signature",
+      "description": "An empty v1 value never matches.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "no_matching_signature"
+      }
+    },
+    {
+      "name": "expired",
+      "description": "Validly signed, one second past the tolerance.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000301,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "timestamp_out_of_tolerance"
+      }
+    },
+    {
+      "name": "too_far_in_future",
+      "description": "Validly signed, one second ahead of the tolerance.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1789999699,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "timestamp_out_of_tolerance"
+      }
+    },
+    {
+      "name": "missing_header",
+      "description": "No header at all: an endpoint on an old secret is not signed until the secret is rolled.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": null,
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "missing_header"
+      }
+    },
+    {
+      "name": "empty_header",
+      "description": "An empty header counts as missing.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "missing_header"
+      }
+    },
+    {
+      "name": "no_timestamp",
+      "description": "v1 without t.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "malformed_header"
+      }
+    },
+    {
+      "name": "no_v1",
+      "description": "t without any v1.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "malformed_header"
+      }
+    },
+    {
+      "name": "only_unknown_scheme",
+      "description": "A v2 value alone is not a usable signature.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,v2=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "malformed_header"
+      }
+    },
+    {
+      "name": "non_numeric_timestamp",
+      "description": "t must be digits.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=abc,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "malformed_header"
+      }
+    },
+    {
+      "name": "float_timestamp",
+      "description": "t must be digits.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000.5,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "malformed_header"
+      }
+    },
+    {
+      "name": "duplicate_timestamp",
+      "description": "More than one t is ambiguous.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "t=1790000000,t=1790000000,v1=4dbd2c384e81ff6d4a6a066e56d62d5c307a50b02deb9e2be6155b63782199d7",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "malformed_header"
+      }
+    },
+    {
+      "name": "garbage_header",
+      "description": "A header that is not this format at all.",
+      "body": "{\"eventType\":\"verification.ping\",\"eventId\":\"evt_ping_0001\",\"attemptId\":\"att_0001\",\"playId\":\"play_0001\",\"organisationId\":\"org_0001\",\"t0\":\"2026-09-21T14:13:20.000Z\",\"events\":[]}",
+      "header": "garbage",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "malformed_header"
+      }
+    },
+    {
+      "name": "verified_but_not_json",
+      "description": "A correct signature over a body that does not parse.",
+      "body": "this body is signed correctly but is not JSON",
+      "header": "t=1790000000,v1=b804ca096c10b0aa765099ef3f5e8a3596d1b09710bdda2b08fbd087a826cb54",
+      "secrets": [
+        "vwsec_11111111111111111111111111111111"
+      ],
+      "now": 1790000000,
+      "tolerance_seconds": 300,
+      "expect": {
+        "ok": false,
+        "error": "invalid_payload"
+      }
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "name": "vojo",
+  "version": "0.1.0",
+  "description": "Official TypeScript and JavaScript client for the Vojo API.",
+  "author": "Vojo Media Limited",
+  "homepage": "https://developers.vojo-media.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VoJo-Media/vojo-typescript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VoJo-Media/vojo-typescript/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "keywords": [
+    "vojo",
+    "dooh",
+    "proof of display",
+    "api",
+    "sdk"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "check:generated": "node scripts/generate.mjs --check",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup",
+    "test": "node --import tsx --test test/*.test.ts",
+    "test:mutation": "node scripts/mutation-check.mjs",
+    "examples": "node scripts/run-examples.mjs"
+  },
+  "devDependencies": {
+    "@stoplight/prism-cli": "5.14.2",
+    "@types/node": "22.19.0",
+    "openapi-typescript": "7.8.0",
+    "tsup": "8.5.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  }
+}

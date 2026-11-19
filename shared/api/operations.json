@@ -1,0 +1,2978 @@
+{
+  "api_version": "2026-10-07",
+  "operations": [
+    {
+      "operation_id": "getMe",
+      "http_method": "GET",
+      "path": "/v1/me",
+      "resource": [
+        "me"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "MeEnvelope",
+        "data_schema": "Me",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "account:read"
+      ],
+      "summary": "Get the signed-in user"
+    },
+    {
+      "operation_id": "setDefaultOrganisation",
+      "http_method": "PUT",
+      "path": "/v1/me/default-organisation",
+      "resource": [
+        "me",
+        "defaultOrganisation"
+      ],
+      "method": "set",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "SetDefaultOrganisationRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "DefaultOrganisationEnvelope",
+        "data_schema": "DefaultOrganisation",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "account:write"
+      ],
+      "summary": "Set the default organisation"
+    },
+    {
+      "operation_id": "listOrganisations",
+      "http_method": "GET",
+      "path": "/v1/organisations",
+      "resource": [
+        "organisations"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "OrganisationSummaryArrayEnvelope",
+        "data_schema": null,
+        "item_schema": "OrganisationSummary",
+        "is_array": true
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "account:read"
+      ],
+      "summary": "List accessible organisations"
+    },
+    {
+      "operation_id": "createOrganisation",
+      "http_method": "POST",
+      "path": "/v1/organisations",
+      "resource": [
+        "organisations"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateOrganisationRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "OrganisationEnvelope",
+        "data_schema": "Organisation",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "account:write"
+      ],
+      "summary": "Create an organisation"
+    },
+    {
+      "operation_id": "getOrganisation",
+      "http_method": "GET",
+      "path": "/v1/organisation",
+      "resource": [
+        "organisation"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "OrganisationEnvelope",
+        "data_schema": "Organisation",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [],
+      "summary": "Get the active organisation"
+    },
+    {
+      "operation_id": "listEntitlements",
+      "http_method": "GET",
+      "path": "/v1/entitlements",
+      "resource": [
+        "entitlements"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "EntitlementArrayEnvelope",
+        "data_schema": null,
+        "item_schema": "Entitlement",
+        "is_array": true
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "account:read"
+      ],
+      "summary": "List the organisation's entitlements"
+    },
+    {
+      "operation_id": "listScreens",
+      "http_method": "GET",
+      "path": "/v1/screens",
+      "resource": [
+        "screens"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "site_id",
+          "required": false
+        },
+        {
+          "name": "has_harvester",
+          "required": false
+        },
+        {
+          "name": "q",
+          "required": false
+        },
+        {
+          "name": "sort",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "ScreenListEnvelope",
+        "data_schema": null,
+        "item_schema": "Screen",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:read"
+      ],
+      "summary": "List screens"
+    },
+    {
+      "operation_id": "createScreen",
+      "http_method": "POST",
+      "path": "/v1/screens",
+      "resource": [
+        "screens"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateScreenRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "ScreenEnvelope",
+        "data_schema": "Screen",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Create a screen"
+    },
+    {
+      "operation_id": "getScreen",
+      "http_method": "GET",
+      "path": "/v1/screens/{screen_id}",
+      "resource": [
+        "screens"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "ScreenEnvelope",
+        "data_schema": "Screen",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:read"
+      ],
+      "summary": "Get a screen"
+    },
+    {
+      "operation_id": "updateScreen",
+      "http_method": "PATCH",
+      "path": "/v1/screens/{screen_id}",
+      "resource": [
+        "screens"
+      ],
+      "method": "update",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "UpdateScreenRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "ScreenEnvelope",
+        "data_schema": "Screen",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Update a screen"
+    },
+    {
+      "operation_id": "deleteScreen",
+      "http_method": "DELETE",
+      "path": "/v1/screens/{screen_id}",
+      "resource": [
+        "screens"
+      ],
+      "method": "delete",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          204
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Delete a screen"
+    },
+    {
+      "operation_id": "assignScreenHarvester",
+      "http_method": "PUT",
+      "path": "/v1/screens/{screen_id}/harvester",
+      "resource": [
+        "screens",
+        "harvester"
+      ],
+      "method": "assign",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "AssignHarvesterRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "ScreenEnvelope",
+        "data_schema": "Screen",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Assign a harvester to a screen"
+    },
+    {
+      "operation_id": "unassignScreenHarvester",
+      "http_method": "DELETE",
+      "path": "/v1/screens/{screen_id}/harvester",
+      "resource": [
+        "screens",
+        "harvester"
+      ],
+      "method": "unassign",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          204
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Unassign a screen's harvester"
+    },
+    {
+      "operation_id": "assignScreenSite",
+      "http_method": "PUT",
+      "path": "/v1/screens/{screen_id}/site",
+      "resource": [
+        "screens",
+        "site"
+      ],
+      "method": "assign",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "AssignSiteRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "ScreenEnvelope",
+        "data_schema": "Screen",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Assign a screen to a site"
+    },
+    {
+      "operation_id": "unassignScreenSite",
+      "http_method": "DELETE",
+      "path": "/v1/screens/{screen_id}/site",
+      "resource": [
+        "screens",
+        "site"
+      ],
+      "method": "unassign",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          204
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Remove a screen from its site"
+    },
+    {
+      "operation_id": "createScreenCalibration",
+      "http_method": "POST",
+      "path": "/v1/screens/{screen_id}/calibrations",
+      "resource": [
+        "screens",
+        "calibrations"
+      ],
+      "method": "create",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "ScreenCalibrationEnvelope",
+        "data_schema": "ScreenCalibration",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:write"
+      ],
+      "summary": "Calibrate a screen"
+    },
+    {
+      "operation_id": "listScreenSizeRanges",
+      "http_method": "GET",
+      "path": "/v1/screen-size-ranges",
+      "resource": [
+        "screenSizeRanges"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "ScreenSizeRangeArrayEnvelope",
+        "data_schema": null,
+        "item_schema": "ScreenSizeRange",
+        "is_array": true
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "screens:read"
+      ],
+      "summary": "List screen size ranges"
+    },
+    {
+      "operation_id": "getPlaysStats",
+      "http_method": "GET",
+      "path": "/v1/stats/plays",
+      "resource": [
+        "stats",
+        "plays"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "granularity",
+          "required": false
+        },
+        {
+          "name": "range",
+          "required": false
+        },
+        {
+          "name": "scope_type",
+          "required": false
+        },
+        {
+          "name": "scope_id",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "PlaysSeriesAggregateEnvelope",
+        "data_schema": "PlaysSeries",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Plays over time"
+    },
+    {
+      "operation_id": "getActivityStats",
+      "http_method": "GET",
+      "path": "/v1/stats/activity",
+      "resource": [
+        "stats",
+        "activity"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "range",
+          "required": false
+        },
+        {
+          "name": "dimension",
+          "required": false
+        },
+        {
+          "name": "top",
+          "required": false
+        },
+        {
+          "name": "scope_type",
+          "required": false
+        },
+        {
+          "name": "scope_id",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "ActivityMatrixAggregateEnvelope",
+        "data_schema": "ActivityMatrix",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Activity matrix"
+    },
+    {
+      "operation_id": "getAttentionStats",
+      "http_method": "GET",
+      "path": "/v1/stats/attention",
+      "resource": [
+        "stats",
+        "attention"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "scope_type",
+          "required": false
+        },
+        {
+          "name": "scope_id",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "AttentionAggregateEnvelope",
+        "data_schema": "Attention",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Screens needing attention"
+    },
+    {
+      "operation_id": "listIssues",
+      "http_method": "GET",
+      "path": "/v1/issues",
+      "resource": [
+        "issues"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "scope_type",
+          "required": false
+        },
+        {
+          "name": "scope_id",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "IssueAggregateArrayEnvelope",
+        "data_schema": null,
+        "item_schema": "Issue",
+        "is_array": true
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "List operational issues"
+    },
+    {
+      "operation_id": "getSiteStats",
+      "http_method": "GET",
+      "path": "/v1/stats/sites",
+      "resource": [
+        "stats",
+        "sites"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "scope_type",
+          "required": false
+        },
+        {
+          "name": "scope_id",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "SiteHealthAggregateArrayEnvelope",
+        "data_schema": null,
+        "item_schema": "SiteHealth",
+        "is_array": true
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Per-site harvester health"
+    },
+    {
+      "operation_id": "getVerificationStats",
+      "http_method": "GET",
+      "path": "/v1/stats/verification",
+      "resource": [
+        "stats",
+        "verification"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "type",
+          "required": true
+        },
+        {
+          "name": "days",
+          "required": false
+        },
+        {
+          "name": "scope_type",
+          "required": false
+        },
+        {
+          "name": "scope_id",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "VerificationStatsAggregateEnvelope",
+        "data_schema": "VerificationStats",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Verified plays by method"
+    },
+    {
+      "operation_id": "getScreenPerformanceStats",
+      "http_method": "GET",
+      "path": "/v1/screens/{screen_id}/stats/performance",
+      "resource": [
+        "screens",
+        "stats",
+        "performance"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [
+        {
+          "name": "range",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "ScreenPerformanceAggregateEnvelope",
+        "data_schema": "ScreenPerformance",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Screen performance"
+    },
+    {
+      "operation_id": "getScreenContentStats",
+      "http_method": "GET",
+      "path": "/v1/screens/{screen_id}/stats/content",
+      "resource": [
+        "screens",
+        "stats",
+        "content"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [
+        {
+          "name": "range",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "ScreenContentAggregateEnvelope",
+        "data_schema": "ScreenContent",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Screen content breakdown"
+    },
+    {
+      "operation_id": "getScreenQualityStats",
+      "http_method": "GET",
+      "path": "/v1/screens/{screen_id}/stats/quality",
+      "resource": [
+        "screens",
+        "stats",
+        "quality"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "ScreenQualityAggregateEnvelope",
+        "data_schema": "ScreenQuality",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Screen quality"
+    },
+    {
+      "operation_id": "getHarvesterPlaysStats",
+      "http_method": "GET",
+      "path": "/v1/harvesters/{harvester_id}/stats/plays",
+      "resource": [
+        "harvesters",
+        "stats",
+        "plays"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "harvester_id"
+      ],
+      "query_params": [
+        {
+          "name": "from",
+          "required": true
+        },
+        {
+          "name": "to",
+          "required": true
+        },
+        {
+          "name": "granularity",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "envelope",
+        "envelope_schema": "HarvesterPlaysAggregateEnvelope",
+        "data_schema": "HarvesterPlays",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Harvester verified plays"
+    },
+    {
+      "operation_id": "getHomeDashboard",
+      "http_method": "GET",
+      "path": "/v1/dashboards/home",
+      "resource": [
+        "dashboards",
+        "home"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "DashboardEnvelope",
+        "data_schema": "Dashboard",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "dashboards:read"
+      ],
+      "summary": "Get the home dashboard template"
+    },
+    {
+      "operation_id": "listDashboards",
+      "http_method": "GET",
+      "path": "/v1/dashboards",
+      "resource": [
+        "dashboards"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "DashboardSummaryListEnvelope",
+        "data_schema": null,
+        "item_schema": "DashboardSummary",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "dashboards:read"
+      ],
+      "summary": "List dashboards"
+    },
+    {
+      "operation_id": "createDashboard",
+      "http_method": "POST",
+      "path": "/v1/dashboards",
+      "resource": [
+        "dashboards"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateDashboardRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "DashboardEnvelope",
+        "data_schema": "Dashboard",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "dashboards:write"
+      ],
+      "summary": "Create a dashboard"
+    },
+    {
+      "operation_id": "getDashboard",
+      "http_method": "GET",
+      "path": "/v1/dashboards/{dashboard_id}",
+      "resource": [
+        "dashboards"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "dashboard_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "DashboardEnvelope",
+        "data_schema": "Dashboard",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "dashboards:read"
+      ],
+      "summary": "Get a dashboard"
+    },
+    {
+      "operation_id": "updateDashboard",
+      "http_method": "PATCH",
+      "path": "/v1/dashboards/{dashboard_id}",
+      "resource": [
+        "dashboards"
+      ],
+      "method": "update",
+      "path_params": [
+        "dashboard_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "UpdateDashboardRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "DashboardEnvelope",
+        "data_schema": "Dashboard",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "dashboards:write"
+      ],
+      "summary": "Update a dashboard"
+    },
+    {
+      "operation_id": "deleteDashboard",
+      "http_method": "DELETE",
+      "path": "/v1/dashboards/{dashboard_id}",
+      "resource": [
+        "dashboards"
+      ],
+      "method": "delete",
+      "path_params": [
+        "dashboard_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          204
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2"
+      ],
+      "scopes": [
+        "dashboards:write"
+      ],
+      "summary": "Delete a dashboard"
+    },
+    {
+      "operation_id": "listHarvesters",
+      "http_method": "GET",
+      "path": "/v1/harvesters",
+      "resource": [
+        "harvesters"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "assigned",
+          "required": false
+        },
+        {
+          "name": "q",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "HarvesterListEnvelope",
+        "data_schema": null,
+        "item_schema": "Harvester",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "harvesters:read"
+      ],
+      "summary": "List harvesters"
+    },
+    {
+      "operation_id": "activateHarvester",
+      "http_method": "POST",
+      "path": "/v1/harvesters",
+      "resource": [
+        "harvesters"
+      ],
+      "method": "activate",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "ActivateHarvesterRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "HarvesterEnvelope",
+        "data_schema": "Harvester",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "harvesters:write"
+      ],
+      "summary": "Activate a harvester"
+    },
+    {
+      "operation_id": "getHarvester",
+      "http_method": "GET",
+      "path": "/v1/harvesters/{harvester_id}",
+      "resource": [
+        "harvesters"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "harvester_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "HarvesterEnvelope",
+        "data_schema": "Harvester",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "harvesters:read"
+      ],
+      "summary": "Get a harvester"
+    },
+    {
+      "operation_id": "listSites",
+      "http_method": "GET",
+      "path": "/v1/sites",
+      "resource": [
+        "sites"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "q",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "SiteListEnvelope",
+        "data_schema": null,
+        "item_schema": "Site",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "sites:read"
+      ],
+      "summary": "List sites"
+    },
+    {
+      "operation_id": "createSite",
+      "http_method": "POST",
+      "path": "/v1/sites",
+      "resource": [
+        "sites"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateSiteRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "SiteEnvelope",
+        "data_schema": "Site",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "sites:write"
+      ],
+      "summary": "Create a site"
+    },
+    {
+      "operation_id": "getSite",
+      "http_method": "GET",
+      "path": "/v1/sites/{site_id}",
+      "resource": [
+        "sites"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "site_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "SiteEnvelope",
+        "data_schema": "Site",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "sites:read"
+      ],
+      "summary": "Get a site"
+    },
+    {
+      "operation_id": "updateSite",
+      "http_method": "PATCH",
+      "path": "/v1/sites/{site_id}",
+      "resource": [
+        "sites"
+      ],
+      "method": "update",
+      "path_params": [
+        "site_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "UpdateSiteRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "SiteEnvelope",
+        "data_schema": "Site",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "sites:write"
+      ],
+      "summary": "Update a site"
+    },
+    {
+      "operation_id": "deleteSite",
+      "http_method": "DELETE",
+      "path": "/v1/sites/{site_id}",
+      "resource": [
+        "sites"
+      ],
+      "method": "delete",
+      "path_params": [
+        "site_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          204
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "sites:write"
+      ],
+      "summary": "Delete a site"
+    },
+    {
+      "operation_id": "createWrapper",
+      "http_method": "POST",
+      "path": "/v1/wrappers",
+      "resource": [
+        "wrappers"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateWrapperRequest"
+      },
+      "response": {
+        "statuses": [
+          201,
+          202
+        ],
+        "returns": "data",
+        "envelope_schema": "WrapperEnvelope",
+        "data_schema": "Wrapper",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "wrappers:write"
+      ],
+      "summary": "Create a wrapper"
+    },
+    {
+      "operation_id": "getWrapper",
+      "http_method": "GET",
+      "path": "/v1/wrappers/{wrapper_id}",
+      "resource": [
+        "wrappers"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "wrapper_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "WrapperEnvelope",
+        "data_schema": "Wrapper",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "wrappers:write"
+      ],
+      "summary": "Get a wrapper"
+    },
+    {
+      "operation_id": "listClients",
+      "http_method": "GET",
+      "path": "/v1/clients",
+      "resource": [
+        "clients"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "q",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "ClientListEnvelope",
+        "data_schema": null,
+        "item_schema": "Client",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "clients:read"
+      ],
+      "summary": "List clients"
+    },
+    {
+      "operation_id": "getClient",
+      "http_method": "GET",
+      "path": "/v1/clients/{client_id}",
+      "resource": [
+        "clients"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "client_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "ClientEnvelope",
+        "data_schema": "Client",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "clients:read"
+      ],
+      "summary": "Get a client"
+    },
+    {
+      "operation_id": "listCampaigns",
+      "http_method": "GET",
+      "path": "/v1/campaigns",
+      "resource": [
+        "campaigns"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "client_id",
+          "required": false
+        },
+        {
+          "name": "state",
+          "required": false
+        },
+        {
+          "name": "q",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "CampaignListEnvelope",
+        "data_schema": null,
+        "item_schema": "Campaign",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "campaigns:read"
+      ],
+      "summary": "List campaigns"
+    },
+    {
+      "operation_id": "getCampaign",
+      "http_method": "GET",
+      "path": "/v1/campaigns/{campaign_id}",
+      "resource": [
+        "campaigns"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "campaign_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "CampaignEnvelope",
+        "data_schema": "Campaign",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "campaigns:read"
+      ],
+      "summary": "Get a campaign"
+    },
+    {
+      "operation_id": "listAdvertisements",
+      "http_method": "GET",
+      "path": "/v1/advertisements",
+      "resource": [
+        "advertisements"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "client_id",
+          "required": false
+        },
+        {
+          "name": "type",
+          "required": false
+        },
+        {
+          "name": "is_active",
+          "required": false
+        },
+        {
+          "name": "q",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "AdvertisementListEnvelope",
+        "data_schema": null,
+        "item_schema": "Advertisement",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "advertisements:read"
+      ],
+      "summary": "List advertisements"
+    },
+    {
+      "operation_id": "createAdvertisement",
+      "http_method": "POST",
+      "path": "/v1/advertisements",
+      "resource": [
+        "advertisements"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateAdvertisementRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "AdvertisementEnvelope",
+        "data_schema": "Advertisement",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "advertisements:write"
+      ],
+      "summary": "Register an advertisement"
+    },
+    {
+      "operation_id": "createAdvertisementUpload",
+      "http_method": "POST",
+      "path": "/v1/advertisement-uploads",
+      "resource": [
+        "advertisementUploads"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateAdvertisementUploadRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "AdvertisementUploadEnvelope",
+        "data_schema": "AdvertisementUpload",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "advertisements:write"
+      ],
+      "summary": "Start an upload"
+    },
+    {
+      "operation_id": "getAdvertisement",
+      "http_method": "GET",
+      "path": "/v1/advertisements/{advertisement_id}",
+      "resource": [
+        "advertisements"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "advertisement_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "AdvertisementEnvelope",
+        "data_schema": "Advertisement",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "advertisements:read"
+      ],
+      "summary": "Get an advertisement"
+    },
+    {
+      "operation_id": "updateAdvertisement",
+      "http_method": "PATCH",
+      "path": "/v1/advertisements/{advertisement_id}",
+      "resource": [
+        "advertisements"
+      ],
+      "method": "update",
+      "path_params": [
+        "advertisement_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "UpdateAdvertisementRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "AdvertisementEnvelope",
+        "data_schema": "Advertisement",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "advertisements:write"
+      ],
+      "summary": "Update an advertisement"
+    },
+    {
+      "operation_id": "archiveAdvertisement",
+      "http_method": "DELETE",
+      "path": "/v1/advertisements/{advertisement_id}",
+      "resource": [
+        "advertisements"
+      ],
+      "method": "archive",
+      "path_params": [
+        "advertisement_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          204
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": false,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "advertisements:write"
+      ],
+      "summary": "Archive an advertisement"
+    },
+    {
+      "operation_id": "getEvidenceComposition",
+      "http_method": "GET",
+      "path": "/v1/stats/evidence-composition",
+      "resource": [
+        "stats",
+        "evidenceComposition"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "months",
+          "required": false
+        },
+        {
+          "name": "screen_id",
+          "required": false
+        },
+        {
+          "name": "advertisement_id",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "EvidenceCompositionEnvelope",
+        "data_schema": null,
+        "item_schema": "EvidenceCompositionMonth",
+        "is_array": true
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "stats:read"
+      ],
+      "summary": "Evidence composition by month"
+    },
+    {
+      "operation_id": "listPlays",
+      "http_method": "GET",
+      "path": "/v1/plays",
+      "resource": [
+        "plays"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "advertisement_id",
+          "required": false
+        },
+        {
+          "name": "campaign_id",
+          "required": false
+        },
+        {
+          "name": "screen_id",
+          "required": false
+        },
+        {
+          "name": "external_id",
+          "required": false
+        },
+        {
+          "name": "source",
+          "required": false
+        },
+        {
+          "name": "band",
+          "required": false
+        },
+        {
+          "name": "phase",
+          "required": false
+        },
+        {
+          "name": "from",
+          "required": false
+        },
+        {
+          "name": "to",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "PlayListEnvelope",
+        "data_schema": null,
+        "item_schema": "Play",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "plays:read"
+      ],
+      "summary": "List plays"
+    },
+    {
+      "operation_id": "getPlay",
+      "http_method": "GET",
+      "path": "/v1/plays/{play_id}",
+      "resource": [
+        "plays"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "play_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "PlayEnvelope",
+        "data_schema": "Play",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "plays:read"
+      ],
+      "summary": "Get a play"
+    },
+    {
+      "operation_id": "listPlayEvents",
+      "http_method": "GET",
+      "path": "/v1/plays/{play_id}/events",
+      "resource": [
+        "plays",
+        "events"
+      ],
+      "method": "list",
+      "path_params": [
+        "play_id"
+      ],
+      "query_params": [
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "PlayEventListEnvelope",
+        "data_schema": null,
+        "item_schema": "PlayEvent",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "plays:read"
+      ],
+      "summary": "List a play's evidence events"
+    },
+    {
+      "operation_id": "listWebhookEndpoints",
+      "http_method": "GET",
+      "path": "/v1/webhook-endpoints",
+      "resource": [
+        "webhookEndpoints"
+      ],
+      "method": "list",
+      "path_params": [],
+      "query_params": [
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "WebhookEndpointListEnvelope",
+        "data_schema": null,
+        "item_schema": "WebhookEndpoint",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:read"
+      ],
+      "summary": "List webhook endpoints"
+    },
+    {
+      "operation_id": "createWebhookEndpoint",
+      "http_method": "POST",
+      "path": "/v1/webhook-endpoints",
+      "resource": [
+        "webhookEndpoints"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateWebhookEndpointRequest"
+      },
+      "response": {
+        "statuses": [
+          201
+        ],
+        "returns": "data",
+        "envelope_schema": "WebhookEndpointWithSecretEnvelope",
+        "data_schema": "WebhookEndpointWithSecret",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:write"
+      ],
+      "summary": "Create a webhook endpoint"
+    },
+    {
+      "operation_id": "getWebhookEndpoint",
+      "http_method": "GET",
+      "path": "/v1/webhook-endpoints/{webhook_endpoint_id}",
+      "resource": [
+        "webhookEndpoints"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "webhook_endpoint_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "WebhookEndpointEnvelope",
+        "data_schema": "WebhookEndpoint",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:read"
+      ],
+      "summary": "Get a webhook endpoint"
+    },
+    {
+      "operation_id": "updateWebhookEndpoint",
+      "http_method": "PATCH",
+      "path": "/v1/webhook-endpoints/{webhook_endpoint_id}",
+      "resource": [
+        "webhookEndpoints"
+      ],
+      "method": "update",
+      "path_params": [
+        "webhook_endpoint_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "UpdateWebhookEndpointRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "WebhookEndpointEnvelope",
+        "data_schema": "WebhookEndpoint",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:write"
+      ],
+      "summary": "Update a webhook endpoint"
+    },
+    {
+      "operation_id": "deleteWebhookEndpoint",
+      "http_method": "DELETE",
+      "path": "/v1/webhook-endpoints/{webhook_endpoint_id}",
+      "resource": [
+        "webhookEndpoints"
+      ],
+      "method": "delete",
+      "path_params": [
+        "webhook_endpoint_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          204
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:write"
+      ],
+      "summary": "Delete a webhook endpoint"
+    },
+    {
+      "operation_id": "rollWebhookEndpointSecret",
+      "http_method": "POST",
+      "path": "/v1/webhook-endpoints/{webhook_endpoint_id}/roll-secret",
+      "resource": [
+        "webhookEndpoints"
+      ],
+      "method": "rollSecret",
+      "path_params": [
+        "webhook_endpoint_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": false,
+        "schema": null
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "WebhookEndpointWithSecretEnvelope",
+        "data_schema": "WebhookEndpointWithSecret",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:write"
+      ],
+      "summary": "Roll a webhook endpoint's signing secret"
+    },
+    {
+      "operation_id": "listWebhookDeliveries",
+      "http_method": "GET",
+      "path": "/v1/webhook-endpoints/{webhook_endpoint_id}/deliveries",
+      "resource": [
+        "webhookEndpoints",
+        "deliveries"
+      ],
+      "method": "list",
+      "path_params": [
+        "webhook_endpoint_id"
+      ],
+      "query_params": [
+        {
+          "name": "status",
+          "required": false
+        },
+        {
+          "name": "cursor",
+          "required": false
+        },
+        {
+          "name": "limit",
+          "required": false
+        }
+      ],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "page",
+        "envelope_schema": "WebhookDeliveryListEnvelope",
+        "data_schema": null,
+        "item_schema": "WebhookDelivery",
+        "is_array": true
+      },
+      "paginated": true,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:read"
+      ],
+      "summary": "List recent deliveries"
+    },
+    {
+      "operation_id": "retryWebhookDelivery",
+      "http_method": "POST",
+      "path": "/v1/webhook-endpoints/{webhook_endpoint_id}/deliveries/{delivery_id}/retry",
+      "resource": [
+        "webhookEndpoints",
+        "deliveries"
+      ],
+      "method": "retry",
+      "path_params": [
+        "webhook_endpoint_id",
+        "delivery_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          202
+        ],
+        "returns": "void"
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": true,
+      "auth": [
+        "oauth2",
+        "secretKey"
+      ],
+      "scopes": [
+        "webhooks:write"
+      ],
+      "summary": "Retry a delivery"
+    },
+    {
+      "operation_id": "createTestPlay",
+      "http_method": "POST",
+      "path": "/v1/test_helpers/plays",
+      "resource": [
+        "testHelpers",
+        "plays"
+      ],
+      "method": "create",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateTestPlayRequest"
+      },
+      "response": {
+        "statuses": [
+          202
+        ],
+        "returns": "data",
+        "envelope_schema": "TestPlayEnvelope",
+        "data_schema": "TestPlay",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "secretKey"
+      ],
+      "scopes": [
+        "test_helpers:write"
+      ],
+      "summary": "Run a test play"
+    },
+    {
+      "operation_id": "getTestPlay",
+      "http_method": "GET",
+      "path": "/v1/test_helpers/plays/{test_play_id}",
+      "resource": [
+        "testHelpers",
+        "plays"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "test_play_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "TestPlayEnvelope",
+        "data_schema": "TestPlay",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "secretKey"
+      ],
+      "scopes": [
+        "test_helpers:write"
+      ],
+      "summary": "Get a test play"
+    },
+    {
+      "operation_id": "getSandboxSimulation",
+      "http_method": "GET",
+      "path": "/v1/test_helpers/simulation",
+      "resource": [
+        "testHelpers",
+        "simulation"
+      ],
+      "method": "retrieve",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "SandboxSimulationEnvelope",
+        "data_schema": "SandboxSimulation",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "secretKey"
+      ],
+      "scopes": [
+        "test_helpers:write"
+      ],
+      "summary": "Get the sandbox's simulation settings"
+    },
+    {
+      "operation_id": "updateSandboxSimulation",
+      "http_method": "PATCH",
+      "path": "/v1/test_helpers/simulation",
+      "resource": [
+        "testHelpers",
+        "simulation"
+      ],
+      "method": "update",
+      "path_params": [],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "UpdateSandboxSimulationRequest"
+      },
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "SandboxSimulationEnvelope",
+        "data_schema": "SandboxSimulation",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": false,
+      "available_in_early_access": true,
+      "auth": [
+        "secretKey"
+      ],
+      "scopes": [
+        "test_helpers:write"
+      ],
+      "summary": "Switch ambient plays on or off"
+    },
+    {
+      "operation_id": "resetSandbox",
+      "http_method": "POST",
+      "path": "/v1/test_helpers/sandbox/reset",
+      "resource": [
+        "testHelpers",
+        "sandbox"
+      ],
+      "method": "reset",
+      "path_params": [],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "SandboxResetEnvelope",
+        "data_schema": "SandboxReset",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "secretKey"
+      ],
+      "scopes": [
+        "test_helpers:write"
+      ],
+      "summary": "Reset the sandbox"
+    },
+    {
+      "operation_id": "createTestScreenEvent",
+      "http_method": "POST",
+      "path": "/v1/test_helpers/screens/{screen_id}/events",
+      "resource": [
+        "testHelpers",
+        "screens",
+        "events"
+      ],
+      "method": "create",
+      "path_params": [
+        "screen_id"
+      ],
+      "query_params": [],
+      "request_body": {
+        "required": true,
+        "schema": "CreateTestScreenEventRequest"
+      },
+      "response": {
+        "statuses": [
+          202
+        ],
+        "returns": "data",
+        "envelope_schema": "TestScreenEventEnvelope",
+        "data_schema": "TestScreenEvent",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": true,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "secretKey"
+      ],
+      "scopes": [
+        "test_helpers:write"
+      ],
+      "summary": "Make a simulated screen do something"
+    },
+    {
+      "operation_id": "getTestScreenEvent",
+      "http_method": "GET",
+      "path": "/v1/test_helpers/screen_events/{test_screen_event_id}",
+      "resource": [
+        "testHelpers",
+        "screenEvents"
+      ],
+      "method": "retrieve",
+      "path_params": [
+        "test_screen_event_id"
+      ],
+      "query_params": [],
+      "request_body": null,
+      "response": {
+        "statuses": [
+          200
+        ],
+        "returns": "data",
+        "envelope_schema": "TestScreenEventEnvelope",
+        "data_schema": "TestScreenEvent",
+        "item_schema": null,
+        "is_array": false
+      },
+      "paginated": false,
+      "idempotency_key": false,
+      "retry_safe": true,
+      "available_in_early_access": true,
+      "auth": [
+        "secretKey"
+      ],
+      "scopes": [
+        "test_helpers:write"
+      ],
+      "summary": "Get a test screen event"
+    }
+  ],
+  "events": [
+    {
+      "type": "screen.quality",
+      "schema": "ScreenQualityEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Screen colour & brightness quality"
+    },
+    {
+      "type": "screen.calibrated",
+      "schema": "ScreenCalibratedEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Screen calibration baseline established"
+    },
+    {
+      "type": "harvester.checkin",
+      "schema": "HarvesterCheckinEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Harvester checked in"
+    },
+    {
+      "type": "wrapper.ready",
+      "schema": "WrapperEvent",
+      "type_field": "event_type",
+      "id_field": "event_id",
+      "attempt_id_field": "attempt_id",
+      "summary": "Wrapper finished building"
+    },
+    {
+      "type": "wrapper.failed",
+      "schema": "WrapperEvent",
+      "type_field": "event_type",
+      "id_field": "event_id",
+      "attempt_id_field": "attempt_id",
+      "summary": "Wrapper could not be built"
+    },
+    {
+      "type": "pod.verified",
+      "schema": "ProofOfDisplayVerifiedEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Proof of display verified"
+    },
+    {
+      "type": "verification.ping",
+      "schema": "VerificationPingEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Passport (WRAPPER) lifecycle ping — start and end both observed"
+    },
+    {
+      "type": "verification.pod",
+      "schema": "VerificationPodEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Harvester (PoD) reading matched to a play"
+    },
+    {
+      "type": "verification.score.preliminary",
+      "schema": "VerificationScorePreliminaryEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Preliminary score — a play's score as soon as its Passport report completes"
+    },
+    {
+      "type": "verification.score",
+      "schema": "VerificationScoreEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Deprecated alias of verification.score.final"
+    },
+    {
+      "type": "verification.score.final",
+      "schema": "VerificationScoreEvent",
+      "type_field": "eventType",
+      "id_field": "eventId",
+      "attempt_id_field": "attemptId",
+      "summary": "Final score — a play reached FINAL and passed the endpoint's filter policy"
+    }
+  ]
+}

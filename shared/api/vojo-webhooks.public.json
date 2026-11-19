@@ -1,0 +1,1266 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Vojo Webhooks",
+    "version": "1.3.0",
+    "contact": {
+      "name": "Vojo",
+      "url": "https://vojo-media.com"
+    }
+  },
+  "webhooks": {
+    "screen.quality": {
+      "post": {
+        "summary": "Screen colour & brightness quality",
+        "operationId": "screenQuality",
+        "description": "Emitted from a harvester CALIBRATION reading, throttled to one event per screen per `windowSeconds` (the payload is the average over that window). Each channel is scored against the screen's latest calibration baseline. When the screen is not calibrated, channel references are null and status is `UNKNOWN`. The `black` channel is not scored (no calibration baseline exists for it).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScreenQualityEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "screen.calibrated": {
+      "post": {
+        "summary": "Screen calibration baseline established",
+        "operationId": "screenCalibrated",
+        "description": "Emitted once when a harvester completes (re)calibration for its screen and a fresh calibration baseline baseline takes effect — the discrete companion to the continuous `screen.quality` drift signal. `baseline` carries the new per-channel reference (same units as `screen.quality` `reference`). `recalibration` is `true` when the screen already had a baseline, meaning references on earlier `screen.quality` events are superseded. `calibratedAt` matches the `calibratedAt` that subsequent `screen.quality` events will report.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScreenCalibratedEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "harvester.checkin": {
+      "post": {
+        "summary": "Harvester checked in",
+        "operationId": "harvesterCheckin",
+        "description": "Emitted when Vojo hears from a Harvester and records its last check-in, at most once per Harvester every 5 minutes, so a Harvester that stays online sends one event about every 5 minutes. Treat a Harvester as offline when you have had no event for it for longer than that (for example 15 minutes). The time is when Vojo received the data, not the device's own clock, so it never moves backwards when a Harvester that was offline catches up on old readings. Scoped like the screen events: an endpoint limited to some screens or sites hears only Harvesters on those screens or sites, and a Harvester that is not on a screen reaches only endpoints that cover the whole organisation. Existing endpoints must subscribe to it explicitly. To read the same state on demand, use `GET /v1/harvesters`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HarvesterCheckinEvent"
+              },
+              "example": {
+                "eventType": "harvester.checkin",
+                "eventId": "cmwf2h8jx04eqoc07242v9xyz",
+                "attemptId": "cmwf2i3g4074fo307pknfp9ab",
+                "livemode": true,
+                "deviceId": "clh7x2k9p0001ab12cd34ef56",
+                "deviceType": "harvester",
+                "lastCheckin": "1794579800",
+                "harvesterId": "clh7x2k9p0001ab12cd34ef56",
+                "screenId": "clh7x3m1q0002gh78ij90kl12",
+                "organisationId": "clh7x1a2b0000mn34op56qr78",
+                "lastCheckinAt": "2026-11-13T14:23:20Z"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "wrapper.ready": {
+      "post": {
+        "summary": "Wrapper finished building",
+        "operationId": "wrapperReady",
+        "description": "Emitted when a wrapper that `POST /v1/wrappers` accepted with `202` finishes building. `data` is the v1 `Wrapper` resource (status `ready`), identical to `GET /v1/wrappers/{wrapper_id}`. Not emitted for wrappers returned ready with `201`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WrapperEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "wrapper.failed": {
+      "post": {
+        "summary": "Wrapper could not be built",
+        "operationId": "wrapperFailed",
+        "description": "Emitted when a wrapper accepted with `202` fails to build. `data` is the v1 `Wrapper` resource with status `failed` and `failure` set.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WrapperEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "pod.verified": {
+      "post": {
+        "summary": "Proof of display verified",
+        "operationId": "podVerified",
+        "description": "Emitted when a harvester reading is verified against a known creative (proof of play). Now also carries a `freeze` block — the play's freeze quality on the `6 -> 12` bar scale.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProofOfDisplayVerifiedEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "verification.ping": {
+      "post": {
+        "summary": "Passport (WRAPPER) lifecycle ping — start and end both observed",
+        "operationId": "verificationPing",
+        "description": "verification.ping (Passport/WRAPPER, this one), verification.pod (Harvester/PoD), verification.pop (Player/PoP — not yet available, no Player-matching exists today), and the trust score: verification.score.preliminary (real time) then verification.score.final (settled; `verification.score` is its deprecated alias).\n\nEmitted once a play's Passport track has recorded BOTH a start (`CONTENT_STARTED`) and an end (`CONTENT_FINISHED`) event — not on first evidence. `events` carries the full raw event data for the play's Passport track, not a derived status — a play that only ever records `CONTENT_STARTED` (abandoned, never finishes) correctly never fires this event. Settle-once per `(endpoint, playId, eventType)` — an endpoint subscribed to both this and `verification.score.final` receives one of each per play.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationPingEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "verification.pod": {
+      "post": {
+        "summary": "Harvester (PoD) reading matched to a play",
+        "operationId": "verificationPod",
+        "description": "Proof of Display: emitted the first time a Harvester reading is matched to a play, i.e. an optical sensor on the screen saw the creative's fingerprint. Unlike `verification.ping` there is no lifecycle to wait out — the first matched reading is the whole signal, so this fires at most once per `(endpoint, play)`, as soon as the reading is matched. A play can later receive further readings; they do not fire again. An endpoint subscribed after a play's first reading may receive that play's event when a later reading arrives. A reading can reach a play after its score became final, so this can follow `verification.score.final`, and the score doesn't include that reading. `events` carries the play's Harvester readings at firing time (usually exactly one). Settle-once per `(endpoint, playId, eventType)`.\n\n`createdAt` on each reading is the device-reported time. On v1 Harvester firmware it is floored to a 10-minute bucket, so use the play's `t0` — not `createdAt` — to place the play in time. The freeze, jitter, offset and detect measurements are not yet reported by the Harvester pipeline and are therefore not part of this payload.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationPodEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "verification.score.preliminary": {
+      "post": {
+        "summary": "Preliminary score — a play's score as soon as its Passport report completes",
+        "operationId": "verificationScorePreliminary",
+        "description": "The play's trust score as it stands when its Passport track has recorded both a start and a finish — the same moment `verification.ping` fires — so a score is available in real time, before the play settles. It can still change, up or down: evidence that arrives before the play settles (a Harvester read, or one that contradicts Passport) is scored, and `verification.score.final` then reports the settled score, which may be higher or lower. Use this one for live views; bill or report on the final one.\n\nFires at most once per `(endpoint, playId)`; a rescore before the play settles does not fire again. Not sent for a play that has already settled by the time its Passport report completes (its `verification.score.final` is the event to use), nor for a play with no Passport report (Harvester-only plays get only the final event). Not filtered by a filter policy: any endpoint subscribed to it receives it for plays in its scope.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationScorePreliminaryEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "verification.score": {
+      "post": {
+        "summary": "Deprecated alias of verification.score.final",
+        "operationId": "verificationScore",
+        "deprecated": true,
+        "description": "The same event as `verification.score.final`, with the same payload, under its old name. Existing subscriptions keep receiving it unchanged. New integrations subscribe to `verification.score.final` (and `verification.score.preliminary` for a real-time score). An endpoint subscribed to both names receives one event per play, `verification.score.final`, and moving an endpoint from this name to the new one does not resend plays it has already received.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationScoreEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    },
+    "verification.score.final": {
+      "post": {
+        "summary": "Final score — a play reached FINAL and passed the endpoint's filter policy",
+        "operationId": "verificationScoreFinal",
+        "description": "Emitted once a play reaches `FINAL` and clears the endpoint's filter policy. Settle-once per `(endpoint, playId, eventType)` — a play is reported to a given endpoint at most once, ever, even across retries or a later rescore. Only plays that reach FINAL at or after the filter policy's creation are reported.\n\nPublic API (/v1) subscribers: subscribing an endpoint to `verification.score.final` (or the `verification.score` alias) through `POST /v1/webhook-endpoints` (or adding it with `PATCH /v1/webhook-endpoints/{id}`) automatically gives that endpoint a permissive filter policy: no minimum band, no event minimums and no backfill. The event therefore fires for every play in the endpoint's scope that reaches FINAL after the subscription is made, and never replays past plays. `attestConfigId` in the payload is the id of that filter policy. An endpoint that already has a filter policy keeps it unchanged. Filters are not configurable through /v1 yet (planned as an additive change).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationScoreEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "2XX": {
+            "description": "Acknowledged."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "QualityStatus": {
+        "type": "string",
+        "enum": [
+          "GOOD",
+          "BAD",
+          "UNKNOWN"
+        ],
+        "description": "GOOD within +/- the org quality threshold of 100; UNKNOWN when not assessable."
+      },
+      "FreezeStatus": {
+        "type": "string",
+        "enum": [
+          "GOOD",
+          "WARN",
+          "BAD",
+          "UNKNOWN"
+        ]
+      },
+      "QualityChannel": {
+        "type": "object",
+        "description": "One scored channel. `score = round(value / reference * 100)`; 100 = on the calibrated baseline.",
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The measured reading (averaged over the window)."
+          },
+          "reference": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "The calibration baseline this channel was scored against. Null when uncalibrated."
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "round(value / reference * 100). Null when not computable."
+          },
+          "status": {
+            "$ref": "#/components/schemas/QualityStatus"
+          }
+        },
+        "required": [
+          "value",
+          "reference",
+          "score",
+          "status"
+        ]
+      },
+      "Freeze": {
+        "type": "object",
+        "description": "Freeze quality, symmetric about the ideal sample count 6. `score = 100 - (abs(value-6)/(12-6))*100`, clamped 0..100 (6 -> 100; 0 and 12 -> 0; 3 and 9 -> 50).",
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Raw freeze sample count."
+          },
+          "score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "0..100; 100 = ideal (value == low anchor 6), falling to 0 as value deviates by the span (0 at value 0 or 12)."
+          },
+          "status": {
+            "$ref": "#/components/schemas/FreezeStatus"
+          }
+        },
+        "required": [
+          "value",
+          "score",
+          "status"
+        ]
+      },
+      "ScreenQualityEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "eventType": {
+            "const": "screen.quality"
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; CHANGES on each retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries (injected at delivery). Dedupe on this."
+          },
+          "screenId": {
+            "type": "string"
+          },
+          "screenName": {
+            "type": "string"
+          },
+          "basis": {
+            "const": "drift-from-calibration"
+          },
+          "calibratedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Epoch (seconds) the active calibration baseline was taken; null when uncalibrated."
+          },
+          "windowSeconds": {
+            "type": "integer",
+            "description": "The throttle/averaging window this payload covers."
+          },
+          "windowEndAt": {
+            "type": "string",
+            "description": "Epoch (seconds) of the latest reading in this window. Use for staleness — absence of events means no data, not \"healthy\"."
+          },
+          "thresholdPct": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "GOOD/BAD band half-width around 100 (org qualityThreshhold, default 10 = +/-10%). Symmetric, so both over-bright and too-dim are BAD. Same value for brightness and every colour channel. null when no alerting config."
+          },
+          "brightness": {
+            "$ref": "#/components/schemas/QualityChannel",
+            "description": "The white / clear channel."
+          },
+          "colour": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "red": {
+                "$ref": "#/components/schemas/QualityChannel"
+              },
+              "green": {
+                "$ref": "#/components/schemas/QualityChannel"
+              },
+              "blue": {
+                "$ref": "#/components/schemas/QualityChannel"
+              },
+              "status": {
+                "$ref": "#/components/schemas/QualityStatus",
+                "description": "Worst of the three channels."
+              }
+            },
+            "required": [
+              "red",
+              "green",
+              "blue",
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "eventType",
+          "eventId",
+          "screenId",
+          "screenName",
+          "basis",
+          "windowSeconds",
+          "windowEndAt",
+          "thresholdPct",
+          "brightness",
+          "colour"
+        ]
+      },
+      "CalibrationBaseline": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "The new per-channel calibration reference (clear-channel counts). Same units as `QualityChannel.reference` on `screen.quality`. A channel is null only if the harvester reported it as non-numeric.",
+        "properties": {
+          "red": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "green": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "blue": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "white": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "red",
+          "green",
+          "blue",
+          "white"
+        ]
+      },
+      "ScreenCalibratedEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "eventType": {
+            "const": "screen.calibrated"
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; CHANGES on each retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries (injected at delivery). Dedupe on this."
+          },
+          "screenId": {
+            "type": "string"
+          },
+          "screenName": {
+            "type": "string"
+          },
+          "harvesterId": {
+            "type": "string"
+          },
+          "harvesterMacAddress": {
+            "type": "string"
+          },
+          "calibratedAt": {
+            "type": "string",
+            "description": "Epoch (seconds) the new calibration baseline was taken. Equals the calibration baseline now in effect and the `calibratedAt` of subsequent `screen.quality` events."
+          },
+          "recalibration": {
+            "type": "boolean",
+            "description": "True when the screen already had a calibration baseline before this one — references on earlier `screen.quality` events are superseded."
+          },
+          "baseline": {
+            "$ref": "#/components/schemas/CalibrationBaseline"
+          }
+        },
+        "required": [
+          "eventType",
+          "eventId",
+          "screenId",
+          "screenName",
+          "harvesterId",
+          "harvesterMacAddress",
+          "calibratedAt",
+          "recalibration",
+          "baseline"
+        ]
+      },
+      "HarvesterCheckinEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "eventType",
+          "eventId",
+          "deviceId",
+          "deviceType",
+          "lastCheckin",
+          "harvesterId",
+          "screenId",
+          "organisationId",
+          "lastCheckinAt"
+        ],
+        "properties": {
+          "eventType": {
+            "const": "harvester.checkin"
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries (injected at delivery). Dedupe on this."
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; CHANGES on each retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "deviceId": {
+            "type": "string",
+            "description": "The Harvester's id (the same value as `harvesterId`)."
+          },
+          "deviceType": {
+            "const": "harvester"
+          },
+          "lastCheckin": {
+            "type": "string",
+            "pattern": "^\\d{10}$",
+            "description": "When Vojo last heard from the Harvester, epoch seconds (when Vojo received the data)."
+          },
+          "harvesterId": {
+            "type": "string"
+          },
+          "screenId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The screen the Harvester is on, or null when it is not on one."
+          },
+          "organisationId": {
+            "type": "string",
+            "description": "The organisation that owns the Harvester (the endpoint's own organisation)."
+          },
+          "lastCheckinAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The same instant as `lastCheckin`, as ISO-8601 UTC."
+          }
+        }
+      },
+      "WrapperEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Envelope for `wrapper.ready` and `wrapper.failed`.",
+        "properties": {
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "wrapper.ready",
+              "wrapper.failed"
+            ]
+          },
+          "event_id": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries. Dedupe on this."
+          },
+          "attempt_id": {
+            "type": "string",
+            "description": "Per-attempt id; changes on each retry. Do not dedupe on this."
+          },
+          "organisation_id": {
+            "type": "string"
+          },
+          "api_version": {
+            "type": "string",
+            "description": "The `Vojo-Version` the payload is rendered in (the org's pin)."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "The v1 Wrapper resource."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          }
+        },
+        "required": [
+          "event_type",
+          "event_id",
+          "organisation_id",
+          "api_version",
+          "created_at",
+          "data"
+        ]
+      },
+      "ProofOfDisplayVerifiedEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "eventType": {
+            "const": "pod.verified"
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; changes on retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries. Dedupe on this."
+          },
+          "fingerprint": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "description": "Plays in this aggregation."
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "Epoch (seconds) of the reading."
+          },
+          "creative": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "name": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          },
+          "address": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "street": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "line2": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "postcode": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "street",
+              "line2",
+              "city",
+              "state",
+              "postcode"
+            ]
+          },
+          "screen": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ]
+          },
+          "freeze": {
+            "$ref": "#/components/schemas/Freeze"
+          }
+        },
+        "required": [
+          "eventType",
+          "eventId",
+          "fingerprint",
+          "count",
+          "timestamp",
+          "creative",
+          "address",
+          "screen",
+          "freeze"
+        ]
+      },
+      "VerificationScoreEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Sent as `verification.score.final`, or as `verification.score` to endpoints subscribed under the deprecated name. If every Harvester reading arrived after the score became final, `tracks.harvester.eventCount` is 0, because `score` doesn't include them.",
+        "properties": {
+          "eventType": {
+            "type": "string",
+            "enum": [
+              "verification.score.final",
+              "verification.score"
+            ]
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; CHANGES on each retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries (injected at delivery). Dedupe on this."
+          },
+          "playId": {
+            "type": "string"
+          },
+          "externalId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attestConfigId": {
+            "type": "string",
+            "description": "The filter policy this play cleared. For an endpoint subscribed through /v1, this is the permissive filter policy created automatically when the endpoint subscribed to `verification.score`."
+          },
+          "attestedAt": {
+            "type": "string",
+            "description": "Epoch (seconds) this event was generated."
+          },
+          "tracks": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "passport": {
+                "$ref": "#/components/schemas/TrackEventCount"
+              },
+              "player": {
+                "$ref": "#/components/schemas/TrackEventCount"
+              },
+              "harvester": {
+                "$ref": "#/components/schemas/TrackEventCount"
+              }
+            },
+            "required": [
+              "passport",
+              "player",
+              "harvester"
+            ]
+          },
+          "score": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "final": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "band": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH",
+                  "MAX",
+                  null
+                ]
+              },
+              "phase": {
+                "type": "string",
+                "const": "FINAL",
+                "description": "Always FINAL — this event only fires once a play settles."
+              },
+              "policyVersion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "scoredAt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "final",
+              "band",
+              "phase",
+              "policyVersion",
+              "scoredAt"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Partner opaque echo only — never scored."
+          }
+        },
+        "required": [
+          "eventType",
+          "eventId",
+          "playId",
+          "externalId",
+          "attestConfigId",
+          "attestedAt",
+          "tracks",
+          "score",
+          "metadata"
+        ]
+      },
+      "VerificationScorePreliminaryEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "The play's score when its Passport report completed, before it settled. Same `tracks` and `score` shape as `VerificationScoreEvent`, with `score.preliminary` in place of `score.final`, plus the play's identity fields as in `verification.ping`. `tracks.*.eventCount` are raw received-event counts at firing time.",
+        "properties": {
+          "eventType": {
+            "const": "verification.score.preliminary"
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; CHANGES on each retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries (injected at delivery). Dedupe on this."
+          },
+          "playId": {
+            "type": "string"
+          },
+          "organisationId": {
+            "type": "string"
+          },
+          "screenId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "creativeId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "externalPlayId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Per-play partner correlation id (e.g."
+          },
+          "t0": {
+            "type": "string",
+            "description": "Epoch (seconds) the play opened."
+          },
+          "tracks": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "passport": {
+                "$ref": "#/components/schemas/TrackEventCount"
+              },
+              "player": {
+                "$ref": "#/components/schemas/TrackEventCount"
+              },
+              "harvester": {
+                "$ref": "#/components/schemas/TrackEventCount"
+              }
+            },
+            "required": [
+              "passport",
+              "player",
+              "harvester"
+            ]
+          },
+          "score": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "preliminary": {
+                "type": "integer"
+              },
+              "band": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH",
+                  "MAX",
+                  null
+                ]
+              },
+              "phase": {
+                "type": "string",
+                "const": "PRELIMINARY"
+              },
+              "policyVersion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "scoredAt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Epoch (seconds) of the score this event reports."
+              }
+            },
+            "required": [
+              "preliminary",
+              "band",
+              "phase",
+              "policyVersion",
+              "scoredAt"
+            ]
+          }
+        },
+        "required": [
+          "eventType",
+          "eventId",
+          "playId",
+          "organisationId",
+          "t0",
+          "tracks",
+          "score"
+        ]
+      },
+      "TrackEventCount": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventCount": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "eventCount"
+        ]
+      },
+      "VerificationPingEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Fires once a play's Passport (WRAPPER) track has recorded both a start and an end event. `events` is the full raw set of Passport events for this play, in createdAt order — not a derived summary.",
+        "properties": {
+          "eventType": {
+            "const": "verification.ping"
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; CHANGES on each retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries (injected at delivery). Dedupe on this."
+          },
+          "playId": {
+            "type": "string"
+          },
+          "organisationId": {
+            "type": "string"
+          },
+          "screenId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "creativeId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "externalPlayId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Per-play partner correlation id (e.g."
+          },
+          "t0": {
+            "type": "string",
+            "description": "Epoch (seconds) the play opened."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VerificationPingRawEvent"
+            }
+          }
+        },
+        "required": [
+          "eventType",
+          "eventId",
+          "playId",
+          "organisationId",
+          "t0",
+          "events"
+        ]
+      },
+      "VerificationPingRawEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "type": {
+            "const": "PASSPORT"
+          },
+          "eventType": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "CONTENT_STARTED",
+              "FINGERPRINT_SEQUENCE_FINISHED",
+              "CONTENT_FINISHED",
+              null
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Epoch (seconds) this raw event was recorded."
+          },
+          "metadata": {
+            "description": "Partner opaque echo only — never scored. Whatever the player sent, verbatim; null when none was sent."
+          }
+        },
+        "required": [
+          "eventId",
+          "type",
+          "eventType",
+          "createdAt"
+        ]
+      },
+      "VerificationPodEvent": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Fires once, the first time a Harvester reading is matched to a play. `events` is the play's Harvester readings at firing time, in createdAt order — not a derived summary.",
+        "properties": {
+          "eventType": {
+            "const": "verification.pod"
+          },
+          "attemptId": {
+            "type": "string",
+            "description": "Per-attempt id; CHANGES on each retry. Do not dedupe on this."
+          },
+          "livemode": {
+            "type": "boolean",
+            "description": "False for an integrator sandbox's endpoint, true otherwise (injected at delivery)."
+          },
+          "eventId": {
+            "type": "string",
+            "description": "Stable per-event id, constant across retries (injected at delivery). Dedupe on this."
+          },
+          "playId": {
+            "type": "string"
+          },
+          "organisationId": {
+            "type": "string"
+          },
+          "screenId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "creativeId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "externalPlayId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Per-play partner correlation id (e.g."
+          },
+          "t0": {
+            "type": "string",
+            "description": "Epoch (seconds) the play opened. Prefer this over a reading's `createdAt` for placing the play in time."
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VerificationPodRawEvent"
+            }
+          }
+        },
+        "required": [
+          "eventType",
+          "eventId",
+          "playId",
+          "organisationId",
+          "t0",
+          "events"
+        ]
+      },
+      "VerificationPodRawEvent": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "const": "HARVESTER"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Device-reported epoch seconds. Floored to a 10-minute bucket on v1 Harvester firmware."
+          },
+          "fingerprint": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The fingerprint code the Harvester read from the screen."
+          },
+          "deviceKey": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Identifier of the Harvester device that took the reading."
+          },
+          "matchedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Epoch seconds the reading was matched to this play."
+          },
+          "matchRuleVersion": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Version of the matching rule that attached the reading, e.g. `play-match@1+fingerprint-match@1`."
+          }
+        },
+        "required": [
+          "type",
+          "createdAt",
+          "fingerprint",
+          "deviceKey",
+          "matchedAt",
+          "matchRuleVersion"
+        ]
+      }
+    }
+  }
+}
