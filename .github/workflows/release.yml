@@ -27,4 +27,5 @@ jobs:
       - run: npm run build
       # The trusted publisher may only stage: a maintainer approves the
       # release on npmjs.com (or `npm stage approve <id>`) with 2FA.
-      - run: npm stage publish .
+      # Verbose, so a failed OIDC exchange says why.
+      - run: npm stage publish . --loglevel verbose
