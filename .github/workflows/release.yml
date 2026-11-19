@@ -13,8 +13,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
+          # No registry-url: it sets a dummy NODE_AUTH_TOKEN that npm would send
+          # instead of exchanging the OIDC token.
           node-version: 24
-          registry-url: https://registry.npmjs.org
       # `npm stage publish` needs npm 11.15.0 or newer.
       - run: npm install -g npm@11.21.3
       - name: Tag matches package.json
