@@ -9,15 +9,14 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: npm
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-      # Trusted publishing needs npm 11.5.1 or newer.
-      - run: npm install -g npm@11.6.2
+      # `npm stage publish` needs npm 11.15.0 or newer.
+      - run: npm install -g npm@11.21.3
       - name: Tag matches package.json
         run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
       - run: npm ci
@@ -25,4 +24,6 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - run: npm publish
+      # The trusted publisher may only stage: a maintainer approves the
+      # release on npmjs.com (or `npm stage approve <id>`) with 2FA.
+      - run: npm stage publish .
