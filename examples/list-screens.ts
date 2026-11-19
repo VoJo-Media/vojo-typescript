@@ -1,5 +1,5 @@
 // One page, then manual paging. `for await` walks every page for you.
-import Vojo from "vojo";
+import Vojo from "@vojo-media/vojo";
 
 const vojo = new Vojo(process.env.VOJO_SECRET_KEY);
 

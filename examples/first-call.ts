@@ -1,5 +1,5 @@
 // Check your key works, and see which organisation it belongs to.
-import Vojo from "vojo";
+import Vojo from "@vojo-media/vojo";
 
 const vojo = new Vojo(process.env.VOJO_SECRET_KEY);
 

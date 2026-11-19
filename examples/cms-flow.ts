@@ -1,5 +1,5 @@
 // The whole flow: a site, a screen on it, and a wrapped creative for that screen.
-import Vojo from "vojo";
+import Vojo from "@vojo-media/vojo";
 
 const vojo = new Vojo(process.env.VOJO_SECRET_KEY);
 

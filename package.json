@@ -1,5 +1,5 @@
 {
-  "name": "vojo",
+  "name": "@vojo-media/vojo",
   "version": "0.1.0",
   "description": "Official TypeScript and JavaScript client for the Vojo API.",
   "author": "Vojo Media Limited",

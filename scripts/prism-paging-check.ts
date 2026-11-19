@@ -1,6 +1,6 @@
 // Prism replays a fixed next_cursor, so walking its pages must raise the loop
 // error rather than spin forever.
-import Vojo, { VojoPaginationError } from "vojo";
+import Vojo, { VojoPaginationError } from "@vojo-media/vojo";
 
 const vojo = new Vojo();
 try {

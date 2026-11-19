@@ -12,7 +12,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "paths": { "vojo": ["./src/index.ts"] }
+    "paths": { "@vojo-media/vojo": ["./src/index.ts"] }
   },
   "include": ["src", "test", "examples", "scripts/*.ts"]
 }

@@ -1,5 +1,5 @@
 // Branch on the error class, or on `code` when you need more detail.
-import Vojo, { VojoAPIError, VojoConflictError, VojoRateLimitError, VojoValidationError } from "vojo";
+import Vojo, { VojoAPIError, VojoConflictError, VojoRateLimitError, VojoValidationError } from "@vojo-media/vojo";
 
 const vojo = new Vojo(process.env.VOJO_SECRET_KEY);
 

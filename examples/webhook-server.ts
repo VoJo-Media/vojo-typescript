@@ -2,7 +2,7 @@
 // the signing secret. Express users: put express.raw({ type: "application/json" })
 // on the route and pass req.body.
 import { createServer } from "node:http";
-import { webhooks, VojoWebhookVerificationError } from "vojo";
+import { webhooks, VojoWebhookVerificationError } from "@vojo-media/vojo";
 
 const secret = process.env.VOJO_WEBHOOK_SECRET ?? "";
 

@@ -7,7 +7,7 @@ The official TypeScript and JavaScript client for the [Vojo](https://vojo-media.
 ## Install
 
 ```bash
-npm install vojo
+npm install @vojo-media/vojo
 ```
 
 Needs Node.js 20 or later. It has no runtime dependencies.
@@ -17,7 +17,7 @@ Needs Node.js 20 or later. It has no runtime dependencies.
 An organisation owner creates keys in the Vojo portal. A live key starts with `vojo_live_` and comes from **Developers → API keys**. A test key starts with `vojo_test_` and comes from **Developers → Sandboxes**: it reaches only its own sandbox, with the same base URL and endpoints. Objects returned with a test key have `livemode` set to `false` (`organisation.livemode`). See [Authentication](https://developers.vojo-media.com/getting-started/authentication) and [Test in a sandbox](https://developers.vojo-media.com/guides/test-in-a-sandbox) on https://developers.vojo-media.com.
 
 ```ts
-import Vojo from "vojo";
+import Vojo from "@vojo-media/vojo";
 
 const vojo = new Vojo(process.env.VOJO_SECRET_KEY);
 
@@ -77,7 +77,7 @@ Verifying needs only the endpoint's signing secret, not an API key. Pass the **r
 
 ```ts
 import express from "express";
-import { webhooks, VojoWebhookVerificationError } from "vojo";
+import { webhooks, VojoWebhookVerificationError } from "@vojo-media/vojo";
 
 const app = express();
 
@@ -123,7 +123,7 @@ To test your own handler, sign a payload with `webhooks.generateTestHeader({ pay
 ## Errors
 
 ```ts
-import { VojoConflictError, VojoValidationError } from "vojo";
+import { VojoConflictError, VojoValidationError } from "@vojo-media/vojo";
 
 try {
   await vojo.screens.create({ name: "Lobby North", size_inches: 55 });
@@ -195,7 +195,7 @@ Every result also has `lastResponse`, with `status`, `headers`, `requestId`, `ap
 ## Types
 
 ```ts
-import type { Screen, Site, WebhookEvent } from "vojo";
+import type { Screen, Site, WebhookEvent } from "@vojo-media/vojo";
 ```
 
 ## More
