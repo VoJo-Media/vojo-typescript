@@ -1,6 +1,6 @@
 {
   "name": "@vojo-media/vojo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Official TypeScript and JavaScript client for the Vojo API.",
   "author": "Vojo Media Limited",
   "homepage": "https://developers.vojo-media.com",

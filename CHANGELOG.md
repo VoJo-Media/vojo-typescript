@@ -2,6 +2,10 @@
 
 This project follows [Semantic Versioning](https://semver.org). Until 1.0, a minor version can include breaking changes.
 
+## 0.1.1 (2026-11-19)
+
+- No code changes. First release published from GitHub Actions, with npm provenance.
+
 ## 0.1.0 (2026-11-19)
 
 First version, generated from API version `2026-10-07`.
